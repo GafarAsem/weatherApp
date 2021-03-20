@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:eva_icons_flutter/icon_data.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -6,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_awesome_icons/line_awesome_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:weather_app/Modules/descripe_wether.dart';
 import 'package:weather_app/Modules/weather_module.dart';
@@ -41,19 +45,90 @@ class _HomePageState extends State<HomePage> {
   String city;
   int pageSelected;
   final TextEditingController _textController = TextEditingController();
+  var prf;
+  Future<bool> connected;
 
   @override
   void initState() {
     super.initState();
     pageSelected = 0;
+    connected = getConnected();
+    getLastWeather();
+  }
+
+  Future<bool> getConnected() async {
+    bool result = await DataConnectionChecker().hasConnection;
+    return result;
+  }
+
+  Future<SharedPreferences> getLastWeather() async {
+    return await SharedPreferences.getInstance();
+  }
+
+  Future<bool> setLastWeather(String dataWeather) async {
+    final prf = await SharedPreferences.getInstance();
+    bool lastWeather = await prf.setString('last_weather', dataWeather);
+    return lastWeather;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (pageSelected == 0)
-      return getPositionWeatherWidget(context);
-    else
-      return getCityWeatherWidget(context, _textController.text);
+    return FutureBuilder(
+        future: connected,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data as bool) {
+              if (pageSelected == 0)
+                return getPositionWeatherWidget(context);
+              else
+                return getCityWeatherWidget(context, _textController.text);
+            } else {
+              return FutureBuilder(
+                  future: prf,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      String lastWeather = prf.getString('last_weather');
+                      if (lastWeather != null) {
+                        var lastWeatherData = jsonDecode(lastWeather);
+                        _weather = Weather.fromJson(lastWeatherData);
+                        if (pageSelected == 0)
+                          return getPositionWeatherWidget(context);
+                        else
+                          return getCityWeatherWidget(
+                              context, _textController.text);
+                      } else {
+                        return Container(
+                          color: UI.gray_dark,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: UI.gray_white,
+                            ),
+                          ),
+                        );
+                      }
+                    } else {
+                      return Container(
+                        color: UI.gray_dark,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            backgroundColor: UI.gray_white,
+                          ),
+                        ),
+                      );
+                    }
+                  });
+            }
+          } else {
+            return Container(
+              color: UI.gray_dark,
+              child: Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: UI.gray_white,
+                ),
+              ),
+            );
+          }
+        });
   }
 
   Widget scaffold(BuildContext context) {
@@ -248,6 +323,7 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   _weather = WeatherData.getWeather(snapshot.data);
+                  setLastWeather(snapshot.data.toString());
                   return scaffold(context);
                 } else {
                   return Container(

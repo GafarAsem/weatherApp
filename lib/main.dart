@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Scenes/home_page.dart';
 import 'Service/web_service.dart';
@@ -14,6 +15,8 @@ void main()  async {
 
 
 class MyApp extends StatelessWidget {
+
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -27,6 +30,7 @@ class MyApp extends StatelessWidget {
       home: Material(child: HomePage()),
     );
   }
+
 }
 
 //

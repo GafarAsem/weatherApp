@@ -30,6 +30,9 @@ dependencies:
   geolocator: ^7.0.1
   smooth_page_indicator: ^0.2.1
   search_widget: ^1.0.2
+  shared_preferences: ^2.0.5
+  connectivity: ^3.0.3
+  data_connection_checker: ^0.3.4
   flutter:
     sdk: flutter
 
