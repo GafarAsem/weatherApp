@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 import 'dart:convert';
 
 import 'package:data_connection_checker/data_connection_checker.dart';
-=======
->>>>>>> d7d9b543cb8bad29f869ee4e8315464d2417aa16
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:eva_icons_flutter/icon_data.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -12,10 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_awesome_icons/line_awesome_icons.dart';
-<<<<<<< HEAD
 import 'package:shared_preferences/shared_preferences.dart';
-=======
->>>>>>> d7d9b543cb8bad29f869ee4e8315464d2417aa16
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:weather_app/Modules/descripe_wether.dart';
 import 'package:weather_app/Modules/weather_module.dart';
@@ -51,17 +45,13 @@ class _HomePageState extends State<HomePage> {
   String city;
   int pageSelected;
   final TextEditingController _textController = TextEditingController();
-<<<<<<< HEAD
   var prf;
   Future<bool> connected;
-=======
->>>>>>> d7d9b543cb8bad29f869ee4e8315464d2417aa16
 
   @override
   void initState() {
     super.initState();
     pageSelected = 0;
-<<<<<<< HEAD
     connected = getConnected();
     getLastWeather();
   }
@@ -79,13 +69,10 @@ class _HomePageState extends State<HomePage> {
     final prf = await SharedPreferences.getInstance();
     bool lastWeather = await prf.setString('last_weather', dataWeather);
     return lastWeather;
-=======
->>>>>>> d7d9b543cb8bad29f869ee4e8315464d2417aa16
   }
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return FutureBuilder(
         future: connected,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -142,12 +129,6 @@ class _HomePageState extends State<HomePage> {
             );
           }
         });
-=======
-    if (pageSelected == 0)
-      return getPositionWeatherWidget(context);
-    else
-      return getCityWeatherWidget(context, _textController.text);
->>>>>>> d7d9b543cb8bad29f869ee4e8315464d2417aa16
   }
 
   Widget scaffold(BuildContext context) {
@@ -342,10 +323,7 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   _weather = WeatherData.getWeather(snapshot.data);
-<<<<<<< HEAD
                   setLastWeather(snapshot.data.toString());
-=======
->>>>>>> d7d9b543cb8bad29f869ee4e8315464d2417aa16
                   return scaffold(context);
                 } else {
                   return Container(
