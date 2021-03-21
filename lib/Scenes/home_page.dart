@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     pageSelected = 0;
     connected = getConnected();
-    getLastWeather();
+    prf = getLastWeather();
   }
 
   Future<bool> getConnected() async {
@@ -87,7 +87,9 @@ class _HomePageState extends State<HomePage> {
                   future: prf,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
-                      String lastWeather = prf.getString('last_weather');
+                      print(snapshot.data);
+                      String lastWeather =
+                      snapshot.data.getString('last_weather');
                       if (lastWeather != null) {
                         var lastWeatherData = jsonDecode(lastWeather);
                         _weather = Weather.fromJson(lastWeatherData);
@@ -96,7 +98,8 @@ class _HomePageState extends State<HomePage> {
                         else
                           return getCityWeatherWidget(
                               context, _textController.text);
-                      } else {
+                      }
+                      else {
                         return Container(
                           color: UI.gray_dark,
                           child: Center(
